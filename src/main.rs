@@ -177,7 +177,7 @@ fn app() -> Html {
             <div class="form-group">
                 <label for="sets">{"Sets (comma-separated)"}</label>
                 <input type="text" id="sets" value={(*sets).clone()} 
-                       oninput={Callback::from(move |e: InputEvent| sets.set(e.to_string().into()))} 
+                       oninput={Callback::from(move |e: InputEvent| sets.set(e.as_string().unwrap().into()))} 
                        placeholder="Enter sets" />
                        
                 <label for="without-rarity">{"Without Rarity"}</label>
