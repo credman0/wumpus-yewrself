@@ -1,4 +1,5 @@
 use wasm_bindgen_futures::JsFuture;
+use web_sys::HtmlInputElement;
 use yew::prelude::*;
 use wasm_bindgen_futures::spawn_local;
 use reqwest::Client;
@@ -174,11 +175,11 @@ fn app() -> Html {
 
     html! {
         <div class="container">
-            <div class="form-group">
-                <label for="sets">{"Sets (comma-separated)"}</label>
-                <input type="text" id="sets" value={(*sets).clone()} 
-                       oninput={Callback::from(move |e: InputEvent| sets.set(e.as_string().unwrap().into()))} 
-                       placeholder="Enter sets" />
+			<div class="form-group">
+				<label for="sets">{"Sets"}</label>
+				<input type="text" id="sets" value={sets.to_string()} 
+				oninput={Callback::from(move |e: InputEvent| sets.set(e.target().unwrap_throw().dyn_into().map(|x: HtmlInputElement| x.value()).unwrap_or_default()))} 
+				placeholder="Enter sets" />
                        
                 <label for="without-rarity">{"Without Rarity"}</label>
                 <input type="checkbox" id="without-rarity" checked={*without_rarity} 
@@ -191,29 +192,29 @@ fn app() -> Html {
                 { for cube.iter().map(|card| html! { <p>{ format!("{:?}", card) }</p> }) }
             </div>
     
-            <div class="form-group">
-                <label for="num-packs">{"Number of Packs"}</label>
-                <input type="number" id="num-packs" value={num_packs.to_string()} 
-                       oninput={Callback::from(move |e: InputEvent| num_packs.set(e.as_string().unwrap().parse().unwrap_or(18)))} 
-                       placeholder="Enter number of packs" />
-    
-                <label for="num-r">{"Number of Rares per Pack"}</label>
-                <input type="number" id="num-r" value={num_r.to_string()} 
-                       oninput={Callback::from(move |e: InputEvent| num_r.set(e.as_string().unwrap().parse().unwrap_or(0)))} 
-                       placeholder="Enter number of rares" />
-                       
-                <label for="num-u">{"Number of Uncommons per Pack"}</label>
-                <input type="number" id="num-u" value={num_u.to_string()} 
-                       oninput={Callback::from(move |e: InputEvent| num_u.set(e.as_string().unwrap().parse().unwrap_or(0)))} 
-                       placeholder="Enter number of uncommons" />
-                       
-                <label for="num-c">{"Number of Commons per Pack"}</label>
-                <input type="number" id="num-c" value={num_c.to_string()} 
-                       oninput={Callback::from(move |e: InputEvent| num_c.set(e.as_string().unwrap().parse().unwrap_or(10)))} 
-                       placeholder="Enter number of commons" />
-    
-                <button onclick={generate_pool}>{"Generate Pool"}</button>
-            </div>
+			<div class="form-group">
+				<label for="num-packs">{"Number of Packs"}</label>
+				<input type="number" id="num-packs" value={num_packs.to_string()} 
+					   oninput={Callback::from(move |e: InputEvent| num_packs.set(e.target().unwrap_throw().dyn_into().map(|x: HtmlInputElement| x.value().parse().unwrap_throw()).unwrap_or(18)))} 
+					   placeholder="Enter number of packs" />
+			
+				<label for="num-r">{"Number of Rares per Pack"}</label>
+				<input type="number" id="num-r" value={num_r.to_string()} 
+					   oninput={Callback::from(move |e: InputEvent| num_r.set(e.target().unwrap_throw().dyn_into().map(|x: HtmlInputElement| x.value().parse().unwrap_or(0)).unwrap_or(0)))} 
+					   placeholder="Enter number of rares" />
+					   
+				<label for="num-u">{"Number of Uncommons per Pack"}</label>
+				<input type="number" id="num-u" value={num_u.to_string()} 
+					   oninput={Callback::from(move |e: InputEvent| num_u.set(e.target().unwrap_throw().dyn_into().map(|x: HtmlInputElement| x.value().parse().unwrap_or(0)).unwrap_or(0)))} 
+					   placeholder="Enter number of uncommons" />
+					   
+				<label for="num-c">{"Number of Commons per Pack"}</label>
+				<input type="number" id="num-c" value={num_c.to_string()} 
+					   oninput={Callback::from(move |e: InputEvent| num_c.set(e.target().unwrap_throw().dyn_into().map(|x: HtmlInputElement| x.value().parse().unwrap_or(10)).unwrap_or(10)))} 
+					   placeholder="Enter number of commons" />
+			
+				<button onclick={generate_pool}>{"Generate Pool"}</button>
+			</div>
     
             <div class="cube-list">
                 { for generated_pool.iter().map(|card| html! { <p>{ format!("{:?}", card) }</p> }) }
